@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+#-*- coding:utf8 -*-
 import pandas as pd
 import numpy as np
 from pandas import DataFrame as df
