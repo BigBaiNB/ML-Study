@@ -63,7 +63,7 @@ def paintImg(x,y,*model,**nextDataSet):
 
 def normalEquationReularization(x,y):
     '''
-    利用 Normal Equation 正则化求解 Theta (矩阵))
+    利用 Normal Equation 正归方程求解 Theta (矩阵))
 
     返回：theta矩阵
 

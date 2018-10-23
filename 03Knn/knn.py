@@ -39,7 +39,7 @@ def knnAlgorithm(originalData,classResult,predictedData,k):
     
 print(knnAlgorithm(originalData,classResult,[1,1],3))
 
-def knnAlgorithm(originalData,classResult,predictedData,k):
+def knnAlgorithm2(originalData,classResult,predictedData,k):
     '''
     说明：KNN核心算法（矩阵方式）
     
