@@ -1,4 +1,5 @@
 import numpy as np
+import math
 import matplotlib as plt
 import pandas as pd
 from pandas import DataFrame as df
@@ -26,30 +27,40 @@ def calcAListValueProbability(dataList):
 
     return result
 
+def safe_log(number,base=2,default=0):
+    '''
+    作用：防止number为0时报错
+    
+    参数：
+        number:待求解数
+        base:基底
+        default：log0 默认返回0
+    返回值：
+        计算结果
+    '''
+    if number==0:
+        return default
+    
+    return math.log(number,base)
 
-def calcEntropy(dataList,coding=2):
+
+def calcEntropy(dataList,coding=2,default=0):
     '''
     说明：计算信息熵
     
     传参:
         dataList:  可迭代数据集
         coding:编码位数 默认 2进制
+        default：log0 默认返回0
 
     返回值：信息熵计算结果
-
-    注意：代码在工程运用上需处理，仅适合讲解理解用
 
     '''
 
     result = calcAListValueProbability(dataList)
 
-
     #返回结果
-
-    if coding == 2:
-        return sum([p*np.log2(1/p) for p in result])
-    else:
-        return sum([p*(np.log(1/p)/np.log(coding)) for p in result])
+    return sum([p*safe_log(1/p,coding) for p in result])
     
 # print(calcEntropy(['a','a','b','c']))  
 
@@ -66,7 +77,8 @@ def InformationGain(dataSet,columnName=[],resultColumName=None):
         各列信息增益的结果
     '''
     result = pd.Series()
-
+    if resultColumName == None:
+        resultColumName = dataSet.columns[-1]
     #获取指定列名
     if columnName:
         nameList = columnName
@@ -75,10 +87,7 @@ def InformationGain(dataSet,columnName=[],resultColumName=None):
             nameList.remove(resultColumName)
     else:
         nameList = dataSet.columns.values.tolist()
-        nameList.pop(-1)
-    
-    if resultColumName == None:
-        resultColumName = dataSet.columns[-1] #取最后一个为结果列
+        nameList.remove(resultColumName)
     
     baseEntropy = calcEntropy(dataSet[resultColumName])#系统熵
 
@@ -86,6 +95,8 @@ def InformationGain(dataSet,columnName=[],resultColumName=None):
     for oneColumn  in nameList:
         probabilityResult = calcAListValueProbability(dataSet[oneColumn])#获取一列的所有数据的概率
         valueEntropyResult = dataSet.groupby(by=oneColumn)[resultColumName].apply(calcEntropy)#以2为编码计算熵
+        print('valueEntropyResult',valueEntropyResult)
+        print('probabilityResult*valueEntropyResult',probabilityResult*valueEntropyResult)
         result[str(oneColumn)] = baseEntropy - sum(probabilityResult*valueEntropyResult)
     
     return result.sort_values(ascending=False)
