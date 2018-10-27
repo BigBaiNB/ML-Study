@@ -64,12 +64,13 @@ def calcEntropy(dataList,coding=2,default=0):
     
 # print(calcEntropy(['a','a','b','c']))  
 
-def InformationGain(dataSet,columnName=[],resultColumName=None):
+def InformationGain(dataSet,continuous_valued=False,columnName=[],resultColumName=None):
     '''
     说明：计算指定数据集的信息增益
 
     传参：
         dataSet: 数据集(DataFrame格式)
+        continuous_valued:s是否为连续值（默认否）
         columnName: 所需计算信息增益的列名（默认是全部）
         resultColumName: 指定表示结果的列名 (默认最后一列)
 
@@ -95,8 +96,8 @@ def InformationGain(dataSet,columnName=[],resultColumName=None):
     for oneColumn  in nameList:
         probabilityResult = calcAListValueProbability(dataSet[oneColumn])#获取一列的所有数据的概率
         valueEntropyResult = dataSet.groupby(by=oneColumn)[resultColumName].apply(calcEntropy)#以2为编码计算熵
-        print('valueEntropyResult',valueEntropyResult)
-        print('probabilityResult*valueEntropyResult',probabilityResult*valueEntropyResult)
+        # print('valueEntropyResult',valueEntropyResult)
+        # print('probabilityResult*valueEntropyResult',probabilityResult*valueEntropyResult)
         result[str(oneColumn)] = baseEntropy - sum(probabilityResult*valueEntropyResult)
     
     return result.sort_values(ascending=False)

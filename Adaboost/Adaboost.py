@@ -68,16 +68,17 @@ def adaBoostTrainDS(dataArr,classLables,numlt=40):
     aggClassEst = np.mat(np.zeros((m,1)))
     for i in range(numlt):
         #获取分类器 错误率 预测类别
-        bestStump,error,ClassEst = bulidStump(dataArr,classLabels,D)#选择最好的分类
-
+        bestStump,error,ClassEst = bulidStump(dataArr,classLables,D)#选择最好的分类
+        print('BestS',bestStump)
         #计算话语权
         alpha = float(0.5*np.log((1-error)/max([error,1e-16])))
         bestStump['alpha'] = alpha
         weakClassArr.append(bestStump)
 
-        expon = np.multiply(-1*alpha*np.mat(classLabels).T,ClassEst)
+        expon = np.multiply(-1*alpha*np.mat(classLables).T,ClassEst)
         D = np.multiply(D,np.exp(expon))
         D = D/D.sum()
+        print('D:',D)
 
         aggClassEst += alpha*ClassEst
 
